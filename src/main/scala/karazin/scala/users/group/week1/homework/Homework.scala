@@ -46,13 +46,12 @@ object Homework :
       else true
 
     def and(left: Boolean, right: Boolean): Boolean =
-      if left == right then true
-      else false
+      if left then right
+      else not(right)
 
     def or(left: Boolean, right: Boolean): Boolean =
-      if left then true
-      else if right then true
-      else false
+      if left then left
+      else right
 
   end `Boolean Operators`
 
