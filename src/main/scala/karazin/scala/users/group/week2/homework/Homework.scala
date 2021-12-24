@@ -12,14 +12,14 @@ object Homework:
 
     def this(x: Int) = this(x, 1)
 
-    val numerator: Int = x / g
-    val denominator: Int = y / g
+    val numer: Int = x / g
+    val denom: Int = y / g
 
     // Defines an external name for a definition
     @targetName("less than")
     // Annotation on a method definition allows using the method as an infix operation
     infix def <(that: Rational): Boolean =
-      this.numerator * that.denominator < that.numerator * this.denominator
+      this.numer * that.denom < that.numer * this.denom
 
     @targetName("less or equal")
     infix def <=(that: Rational): Boolean =
@@ -35,25 +35,27 @@ object Homework:
 
     @targetName("addition")
     infix def +(that: Rational): Rational =
-      new Rational(this.numerator * that.denominator + that.numerator * this.denominator, this.denominator * that.denominator)
+      new Rational(this.numer * that.denom + that.numer * this.denom, this.denom * that.denom)
 
     @targetName("negation")
     infix def unary_- : Rational =
-      new Rational(numerator * -1, denominator)
+      new Rational(numer * -1, denom)
 
     @targetName("subtraction")
     infix def -(that: Rational): Rational =
-      new Rational(this.numerator * that.denominator - that.numerator * this.denominator, this.denominator * that.denominator)
+      new Rational(this.numer * that.denom - that.numer * this.denom, this.denom * that.denom)
 
     @targetName("multiplication")
     infix def *(that: Rational): Rational =
-      new Rational(this.numerator * that.numerator, this.denominator * that.denominator)
+      new Rational(this.numer * that.numer, this.denom * that.denom)
 
     @targetName("division")
     infix def /(that: Rational): Rational =
-      new Rational(this.numerator * that.denominator, this.denominator * that.numerator)
+      if that.numer == 0 then throw new Exception("You cannot divide by zero")
+      else if that.numer > 0 then new Rational(this.numer * that.denom, this.denom * that.numer)
+      else new Rational(this.numer * that.denom * -1, this.denom * that.numer * -1)
 
-    override def toString: String = s"${this.numerator}/${this.denominator}"
+    override def toString: String = s"${this.numer}/${this.denom}"
 
     @tailrec
     private def gcd(a: Int, b: Int): Int =
@@ -64,35 +66,18 @@ object Homework:
     def canEqual(a: Any): Boolean = a.isInstanceOf[Rational]
 
     override def hashCode(): Int = {
-      val state = Seq(numerator, denominator, g)
+      val state = Seq(numer, denom, g)
       state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
     }
 
     override def equals(other: Any): Boolean = other match {
       case that: Rational =>
         (that canEqual this) &&
-          numerator == that.numerator &&
-          denominator == that.denominator &&
+          numer == that.numer &&
+          denom == that.denom &&
           g == that.g
       case _ => false
     }
   end Rational
-
-  def main (args: Array[String]): Unit = {
-/*    val number1 = new Rational(1, 2)
-    val number2 = new Rational(2, 3)
-
-    println(number1.toString())
-    println(number2.toString())
-
-    println((number1 + number2).toString())
-    println((number1 - number2).toString())
-    println((number1 * number2).toString())
-    println((number1 / number2).toString())
-
-    println(number1.unary_-.toString())
-
-    println(number1.equals(number2))*/
-  }
 
 end Homework
